@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Adaptive RAG Chat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Adaptive RAG</h2>
+
+        <input type="password" id="openaiKey" placeholder="OpenAI API Key" />
+        <input type="password" id="tavilyKey" placeholder="Tavily API Key" />
+        <input type="file" id="pdfFile" accept="application/pdf" />
+
+        <button onclick="uploadPDF()">Upload Document</button>
+
+        <p id="uploadStatus"></p>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="chat-container">
+        <div id="chatBox" class="chat-box"></div>
+
+        <div class="input-area">
+            <input type="text" id="question" placeholder="Ask a question..." />
+            <button onclick="askQuestion()">Send</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -121,7 +121,7 @@ class AdaptiveRAGEngine:
             return "CORRECT", good_docs
 
         if len(scores) > 0 and all(s < LOWER_TH for s in scores):
-            return "INCORRECT", []
+            return "Augmented", []
 
         return "AMBIGUOUS", good_docs
 
@@ -193,7 +193,7 @@ class AdaptiveRAGEngine:
         if verdict == "CORRECT":
             final_docs = good_docs
 
-        elif verdict == "INCORRECT":
+        elif verdict == "Augmented":
             web_docs = self._web_search(question)
             final_docs = web_docs
 
@@ -212,3 +212,4 @@ class AdaptiveRAGEngine:
             "verdict": verdict,
             "answer": answer.content
         }
+

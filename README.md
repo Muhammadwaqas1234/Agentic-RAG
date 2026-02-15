@@ -27,7 +27,7 @@
 * **Adaptive Question Answering:** The system automatically routes queries based on relevance scoring:
 
   * **CORRECT:** Answer from document only
-  * **INCORRECT:** Answer from the internet only
+  * **Augmented:** Answer from the internet only
   * **AMBIGUOUS:** Hybrid answer from document + internet
 * **ChatGPT-like UI:** Clean, professional, white-themed interface for intuitive interaction.
 * **No Session Handling:** Simplified architecture with a single global RAG engine instance.
@@ -84,7 +84,7 @@ The system leverages a modular RAG pipeline:
 | Verdict       | Description                                                            |
 | ------------- | ---------------------------------------------------------------------- |
 | **CORRECT**   | Fully sourced from the uploaded PDF document.                          |
-| **INCORRECT** | Not present in document; sourced entirely from the internet.           |
+| **Augmented** | Not present in document; sourced entirely from the internet.           |
 | **AMBIGUOUS** | Partial information in document, additional context from the internet. |
 
 ---
@@ -200,7 +200,7 @@ Ask a question based on uploaded document.
 
 ```json
 {
-  "verdict": "CORRECT | INCORRECT | AMBIGUOUS",
+  "verdict": "CORRECT | Augmented | AMBIGUOUS",
   "answer": "Generated answer from document, internet, or hybrid."
 }
 ```
@@ -218,7 +218,7 @@ Ask a question based on uploaded document.
 ```
 
 * **CORRECT:** Answer is fully derived from document.
-* **INCORRECT:** Answer is retrieved from the internet.
+* **Augmented:** Answer is retrieved from the internet.
 * **AMBIGUOUS:** Document + Internet combined answer.
 
 ---

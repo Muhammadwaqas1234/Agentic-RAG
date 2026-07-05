@@ -21,9 +21,9 @@ function setStatus(kind, text) {
 }
 
 const VERDICT_STYLES = {
-    "CORRECT": { cls: "pill-correct", label: "CORRECT · document" },
-    "Augmented": { cls: "pill-augmented", label: "AUGMENTED · web" },
-    "AMBIGUOUS": { cls: "pill-ambiguous", label: "AMBIGUOUS · hybrid" },
+    "GROUNDED": { cls: "pill-correct", label: "GROUNDED · from your document" },
+    "WEB": { cls: "pill-augmented", label: "WEB · live search" },
+    "HYBRID": { cls: "pill-ambiguous", label: "HYBRID · document + web" },
 };
 
 /* ---------- upload ---------- */

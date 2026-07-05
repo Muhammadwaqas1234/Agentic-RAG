@@ -38,16 +38,16 @@ FastAPI backend ──► FAISS vector search over the uploaded PDF
      ▼
 LLM relevance grading (GPT-4o-mini)
      │
-     ├── document covers it fully  ──► verdict: CORRECT   (document only)
-     ├── document has nothing      ──► verdict: Augmented (Tavily web search)
-     └── document partially covers ──► verdict: AMBIGUOUS (document + web hybrid)
+     ├── document covers it fully  ──► verdict: GROUNDED (document only)
+     ├── document has nothing      ──► verdict: WEB      (Tavily web search)
+     └── document partially covers ──► verdict: HYBRID   (document + web)
 ```
 
 | Verdict | Meaning |
 | :--- | :--- |
-| **CORRECT** | Answer fully sourced from the uploaded PDF |
-| **Augmented** | Not in the document — sourced entirely from live internet search |
-| **AMBIGUOUS** | Partial information in the document, completed with internet context |
+| **GROUNDED** | Answer fully sourced from the uploaded PDF |
+| **WEB** | Not in the document — sourced entirely from live internet search |
+| **HYBRID** | Partial information in the document, completed with internet context |
 
 ---
 
@@ -55,7 +55,7 @@ LLM relevance grading (GPT-4o-mini)
 
 - **PDF upload & indexing** — documents are chunked, embedded, and indexed in FAISS for low-latency semantic retrieval
 - **Adaptive routing** — every query is relevance-graded before answering, so the system never pretends the document says something it doesn't
-- **Explicit verdicts** — each answer is labeled CORRECT / Augmented / AMBIGUOUS, reducing hallucination and building trust
+- **Explicit verdicts** — each answer is labeled GROUNDED / WEB / HYBRID, reducing hallucination and building trust
 - **Live web search** — Tavily integration fills gaps the document can't answer
 - **ChatGPT-style UI** — clean, white-themed chat interface in plain HTML/CSS/JS
 - **Bring-your-own keys** — OpenAI and Tavily keys are entered in the UI, never stored in the codebase
@@ -144,7 +144,7 @@ Ask a question against the indexed document. **JSON body:** `{ "question": "..."
 
 ```json
 {
-  "verdict": "CORRECT | Augmented | AMBIGUOUS",
+  "verdict": "GROUNDED | WEB | HYBRID",
   "answer": "Generated answer from document, internet, or hybrid."
 }
 ```

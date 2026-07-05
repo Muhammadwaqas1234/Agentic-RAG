@@ -118,12 +118,12 @@ class AdaptiveRAGEngine:
                 good_docs.append(d)
 
         if any(s > UPPER_TH for s in scores):
-            return "CORRECT", good_docs
+            return "GROUNDED", good_docs
 
         if len(scores) > 0 and all(s < LOWER_TH for s in scores):
-            return "Augmented", []
+            return "WEB", []
 
-        return "AMBIGUOUS", good_docs
+        return "HYBRID", good_docs
 
     # ---------------------------------
 
@@ -190,10 +190,10 @@ class AdaptiveRAGEngine:
 
         verdict, good_docs = self._evaluate(question, internal_docs)
 
-        if verdict == "CORRECT":
+        if verdict == "GROUNDED":
             final_docs = good_docs
 
-        elif verdict == "Augmented":
+        elif verdict == "WEB":
             web_docs = self._web_search(question)
             final_docs = web_docs
 

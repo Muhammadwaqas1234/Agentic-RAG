@@ -1,36 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Adaptive RAG Chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adaptive RAG — Ask your documents anything</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="app">
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h2>Adaptive RAG</h2>
+    <!-- ===== Sidebar ===== -->
+    <aside class="sidebar">
 
-        <input type="password" id="openaiKey" placeholder="OpenAI API Key" />
-        <input type="password" id="tavilyKey" placeholder="Tavily API Key" />
-        <input type="file" id="pdfFile" accept="application/pdf" />
-
-        <button onclick="uploadPDF()">Upload Document</button>
-
-        <p id="uploadStatus"></p>
-    </div>
-
-    <!-- Chat Area -->
-    <div class="chat-container">
-        <div id="chatBox" class="chat-box"></div>
-
-        <div class="input-area">
-            <input type="text" id="question" placeholder="Ask a question..." />
-            <button onclick="askQuestion()">Send</button>
+        <div class="brand">
+            <div class="brand-mark">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.2 2.2M16.2 16.2l2.2 2.2M18.4 5.6l-2.2 2.2M7.8 16.2l-2.2 2.2"/>
+                    <circle cx="12" cy="12" r="3.2"/>
+                </svg>
+            </div>
+            <div class="brand-text">
+                <h1>Adaptive RAG</h1>
+                <p>Document + web intelligence</p>
+            </div>
         </div>
-    </div>
+
+        <div class="side-section">
+            <span class="side-label">API keys</span>
+
+            <div class="field">
+                <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3 21 2M15 8l3 3"/></svg>
+                <input type="password" id="openaiKey" placeholder="OpenAI API key" autocomplete="off" />
+            </div>
+
+            <div class="field">
+                <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                <input type="password" id="tavilyKey" placeholder="Tavily API key" autocomplete="off" />
+            </div>
+        </div>
+
+        <div class="side-section">
+            <span class="side-label">Document</span>
+
+            <label class="dropzone" id="dropzone" for="pdfFile">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15l3-3 3 3"/></svg>
+                <span class="dz-title" id="dzTitle">Choose a PDF</span>
+                <span class="dz-sub" id="dzSub">or drop it here</span>
+                <input type="file" id="pdfFile" accept="application/pdf" hidden />
+            </label>
+
+            <button class="btn-primary" id="uploadBtn" onclick="uploadPDF()">
+                <span id="uploadBtnText">Index document</span>
+            </button>
+
+            <p class="status" id="uploadStatus" hidden></p>
+        </div>
+
+        <div class="side-foot">
+            <p>Answers are labeled by source:</p>
+            <div class="legend">
+                <span class="pill pill-correct">Document</span>
+                <span class="pill pill-augmented">Web</span>
+                <span class="pill pill-ambiguous">Hybrid</span>
+            </div>
+        </div>
+
+    </aside>
+
+    <!-- ===== Chat ===== -->
+    <main class="chat-container">
+
+        <div id="chatBox" class="chat-box">
+
+            <div class="empty-state" id="emptyState">
+                <div class="empty-mark">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <h2>Ask your document anything</h2>
+                <p>Add your API keys, index a PDF, and start asking. Every answer tells you whether it came from the document, the web, or both.</p>
+                <div class="suggestions">
+                    <button class="chip" onclick="useSuggestion(this)">Summarize the key findings</button>
+                    <button class="chip" onclick="useSuggestion(this)">What methodology was used?</button>
+                    <button class="chip" onclick="useSuggestion(this)">How does this compare with current research?</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="composer">
+            <div class="input-area">
+                <input type="text" id="question" placeholder="Ask a question about your document…" autocomplete="off" />
+                <button class="send-btn" id="sendBtn" onclick="askQuestion()" aria-label="Send">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+                </button>
+            </div>
+            <p class="composer-note">Verdicts: <strong>CORRECT</strong> = document · <strong>Augmented</strong> = web · <strong>AMBIGUOUS</strong> = hybrid</p>
+        </div>
+
+    </main>
 
 </div>
 
